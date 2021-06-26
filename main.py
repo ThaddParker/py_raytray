@@ -23,6 +23,7 @@ from utils.interval import Interval
 from utils.primitive_list import PrimitiveList
 from utils.ray import Ray
 from utils.shapes import Sphere
+from utils.textures import Pigment
 
 
 def ray_color(ray, scene, depth):

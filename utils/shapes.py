@@ -23,11 +23,11 @@ class Primitive(ABC):
 
 class Sphere(Primitive):
 
-    def __init__(self, origin, radius, material) -> None:
+    def __init__(self, origin, radius) -> None:
         super().__init__("sphere")
         self.origin = origin
         self.radius = radius
-        self.material = material
+        self.material = None
 
     def __str__(self):
         return "{}: origin:{}, radius: {}, material: {}".format(self.name, self.origin, self.radius, self.material)
