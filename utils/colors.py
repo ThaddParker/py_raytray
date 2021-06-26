@@ -65,8 +65,14 @@ class RGBColor:
             raise IndexError(f"The provided index name: {item} is invalid. Please provide either 'red','green','blue'")
         
     def __rmul__(self, value):
-        return RGBColor(value * self.red,value*self.green,value*self.blue)
-    
+        return RGBColor(float(value) * self.red,float(value)*self.green,float(value)*self.blue)
+
+    def __mul__(self, other):
+        if isinstance(other, RGBColor):
+            return RGBColor(other.red * self.red, other.green * self.green, other.blue * self.blue)
+        else:
+            return RGBColor(float(other) * self.red, float(other) * self.green, float(other) * self.blue)
+
     def __add__(self, value):
         if isinstance(value, RGBColor):
             return RGBColor(self.red + value.red, self.green + value.green,self.blue+value.blue)

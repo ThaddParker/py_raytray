@@ -20,6 +20,7 @@ import math
 #     else:
 #         return (-half_b - math.sqrt(disc)) /(a)
 from utils.interval import Interval
+from utils.materials import Diffuse, Metal
 from utils.primitive_list import PrimitiveList
 from utils.ray import Ray
 from utils.shapes import Sphere
@@ -33,10 +34,16 @@ def ray_color(ray, scene, depth):
     isect = scene.intersect(ray, Interval(0.001, math.inf))
 
     if isect is not None:
-        vec = 0.5 * (isect.normal + Vector3(1, 1, 1))
-        target = isect.point + random_in_hemisphere(isect.normal) # +  isect.normal + random_unit_vector() # random_in_unit_sphere()
-        val = 0.5 * ray_color(Ray(isect.point, target - isect.point), scene, depth - 1)
-        return val  #  RGBColor(vec.x, vec.y, vec.z)
+        good, ray_scattered, attenuation= isect.material.scatter(ray, isect)
+        if good:
+            return attenuation * ray_color(ray, scene, depth-1)
+        else:
+            return RGBColor(0,0,0)
+
+        # vec = 0.5 * (isect.normal + Vector3(1, 1, 1))
+        # target = isect.point + random_in_hemisphere(isect.normal) # +  isect.normal + random_unit_vector() # random_in_unit_sphere()
+        # val = 0.5 * ray_color(Ray(isect.point, target - isect.point), scene, depth - 1)
+        # return val  #  RGBColor(vec.x, vec.y, vec.z)
 
     # dist = sphere_intersect(Vector3(0, 0, -1), 0.5, ray)
     # if dist > 0.0:
@@ -78,8 +85,15 @@ def main():
     camera = Camera()
     t0 = time.time()
     scene = PrimitiveList()
-    scene.add(Sphere(Vector3(0, 0, -1), 0.5))
-    scene.add(Sphere(Vector3(0, -100.5, -1), 100))
+    matground = Diffuse(Pigment(RGBColor(0.8,0.8,0)))
+    matcenter = Diffuse(Pigment(RGBColor(0.7,0.3,0.3)))
+    matleft = Metal(Pigment(RGBColor(0.8,0.8,0.8)),0.3)
+    matright = Metal(Pigment(RGBColor(0.8,0.6,0.2)),1.0)
+
+    scene.add(Sphere(Vector3(0, 0, -1), 0.5,matcenter))
+    scene.add(Sphere(Vector3(0, -100.5, -1), 100, matground))
+    scene.add(Sphere(Vector3(-1, 0, -1), 0.5, matleft))
+    scene.add(Sphere(Vector3(1, 0, -1), 0.5, matright))
 
     # def to_byte(color_item):
     #     return round(max(min(color_item * 255, 255), 0))
