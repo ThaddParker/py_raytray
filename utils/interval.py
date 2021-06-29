@@ -3,7 +3,7 @@ import math
 
 class Interval:
 
-    def __init__(self, min_dist=-math.inf, max_dist= math.inf):
+    def __init__(self, min_dist=-math.inf, max_dist=math.inf):
         self.min_dist = min_dist
         self.max_dist = max_dist
 
@@ -17,7 +17,6 @@ class Interval:
             return self.max_dist
         return x
 
+
 empty = Interval(math.inf, -math.inf)
 universe = Interval(-math.inf, math.inf)
-
-

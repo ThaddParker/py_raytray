@@ -14,7 +14,7 @@ class Primitive(ABC):
         return self.name
 
     def __repr__(self):
-        return "Primitive: %s" %self.name
+        return "Primitive: %s" % self.name
 
     @abstractmethod
     def intersect(self, ray, ray_minmax_dist) -> Optional[Intersection]:
@@ -33,7 +33,7 @@ class Sphere(Primitive):
         return "{}: origin:{}, radius: {}, material: {}".format(self.name, self.origin, self.radius, self.material)
 
     def intersect(self, ray, ray_minmax_dist) -> Optional[Intersection]:
-        isect = Intersection()
+
 
         oc = ray.origin - self.origin
         a = ray.direction.dot(ray.direction)
@@ -53,7 +53,7 @@ class Sphere(Primitive):
         #     root = (-half_b + sqrtd) / a
         #     if root < ray_min_dist or ray_max_dist < root:
         #         return None
-
+        isect = Intersection()
         isect.distance = root
         isect.point = ray.evaluate(root)
         out_normal = (isect.point - self.origin) / self.radius

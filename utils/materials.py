@@ -1,7 +1,7 @@
 import math
 from abc import abstractmethod, ABC
 
-from utils.functs import random_unit_vector, reflect, random_in_unit_sphere, refract, near_zero
+from utils.functs import random_unit_vector, reflect, random_in_unit_sphere, refract, near_zero, random_double
 from utils.ray import Ray
 from utils.textures import Pigment, Texture
 from utils.colors import RGBColor
@@ -27,6 +27,9 @@ class Diffuse(Material):
             # assuming an RGBColor
             self.pigment = Pigment(color)
 
+    def __str__(self):
+        return self.name + ":pigment: %s" % self.pigment.color.__str__()
+
     def scatter(self, ray_in, isect):
         scatter_dir = isect.normal + random_unit_vector()
         # catch degenerate scatter direction
@@ -35,6 +38,7 @@ class Diffuse(Material):
         scattered = Ray(isect.point, scatter_dir)
         attenuation = self.pigment.color
         return True, scattered, attenuation
+
 
 class Metal(Material):
 
@@ -47,12 +51,16 @@ class Metal(Material):
             self.pigment = Pigment(color)
         self.roughness = roughness if roughness < 1. else 1.
 
+    def __str__(self):
+        return self.name + ":pigment: %s" % self.pigment.color.__str__()
+
     def scatter(self, ray_in, isect):
         reflected = reflect(ray_in.direction.normalize(), isect.normal)
-        ray_scattered = Ray(isect.point, reflected+self.roughness*random_in_unit_sphere())
+        ray_scattered = Ray(isect.point, reflected + self.roughness * random_in_unit_sphere())
         attenuation = self.pigment.color
         d = ray_scattered.direction.dot(isect.normal) > 0
         return d, ray_scattered, attenuation
+
 
 class Refractive(Material):
 
@@ -65,26 +73,32 @@ class Refractive(Material):
             self.pigment = Pigment(color)
         self.ior = ior
 
+    def __str__(self):
+        return self.name + ":pigment: %s" % self.pigment.color.__str__()
+
     def scatter(self, ray_in, isect):
-        attenuation = RGBColor(1,1,1)
-        refraction_ratio = 1./ self.ior if isect.front_face else self.ior
+        attenuation = RGBColor(1, 1, 1)  # TODO: use the internal pigment so that you can have different colors of glass
+        refraction_ratio = 1. / self.ior if isect.front_face else self.ior
         unit_direction = ray_in.direction.normalize()
-        cos_theta = min(-unit_direction.dot(isect.normal),1.0)
+        cos_theta = min(-unit_direction.dot(isect.normal), 1.0)
         sin_theta = math.sqrt(1. - cos_theta * cos_theta)
         cannot_refract = refraction_ratio * sin_theta > 1.
         # direction = None
-        if cannot_refract: # or reflectance(cos_theta, refraction_ratio) ) > random_double()
+        if (cannot_refract or self.reflectance(cos_theta, refraction_ratio)) > random_double():
             direction = reflect(unit_direction, isect.normal)
         else:
             direction = refract(unit_direction, isect.normal, refraction_ratio)
+
         scattered_ray = Ray(isect.point, direction)
         return True, scattered_ray, attenuation
 
-    def reflectance(self, cosine, refractive_index):
+    @staticmethod
+    def reflectance(cosine, refractive_index):
         # use schlick's approximation
-        r0 = (1.-refractive_index) / (1. + refractive_index)
+        r0 = (1. - refractive_index) / (1. + refractive_index)
         r0 = r0 * r0
         return r0 + (1. - r0) * math.pow(1. - cosine, 5)
+
 
 class Checkered(Material):
 
@@ -92,6 +106,9 @@ class Checkered(Material):
         super().__init__("checkered_material")
         self.even_color = even_color
         self.odd_color = odd_color
+
+    def __str__(self):
+        return self.name + ":evenpigment: {}: oddpigment {}".format(self.even_color.__str__(),self.odd_color.__str__())
 
     def scatter(self, ray_in, isect):
         pass

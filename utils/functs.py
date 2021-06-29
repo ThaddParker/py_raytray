@@ -3,7 +3,6 @@ import random
 import numpy as np
 from vectormath import Vector3
 
-
 MTG_19937gen = np.random.Generator(np.random.MT19937(555))
 
 
@@ -63,6 +62,7 @@ def near_zero(vector: Vector3):
     s = 1e-8
     return math.fabs(vector.x) < s and math.fabs(vector.y) < s and math.fabs(vector.z) < s
 
+
 def reflect(in_vector, normal):
     return in_vector - 2 * (in_vector.dot(normal)) * normal
 
@@ -72,6 +72,7 @@ def refract(uv_vector, normal, etai_over_etat):
     r_out_perp = etai_over_etat * (uv_vector + cos_theta * normal)
     r_out_para = -math.sqrt(math.fabs(1.0 - r_out_perp.length ** 2)) * normal
     return r_out_perp + r_out_para
+
 
 def reflectance(cos, ref_index):
     r0 = (1.0 - ref_index) / (1.0 + ref_index)

@@ -28,7 +28,7 @@ class Pigment(Texture):
 class Gradient(Texture):
 
     def __init__(self, start_color=Pigment(RGBColor(1.0, 1.0, 1.0)), end_color=Pigment(RGBColor(0.5, 0.7, 1.0)), axis=1):
-        """Gradient in most likely the x and y axis. """
+        """Gradient in most likely the x(0) and y(1) axis. """
         super().__init__("gradient_texture")
         self.start_color = start_color
         self.end_color = end_color
