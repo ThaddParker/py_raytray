@@ -80,22 +80,30 @@ import math
 
 def main():
     print("ok")
-    settings = SceneSettings(10, 5, (16./9.))
+    settings = SceneSettings(5, 5, (16./9.))
+    settings.image_width = 1200
+
+
     # samplesperpixel = 100
     # maxdepth = 50
-    image = Image(400)
-    camera = Camera(settings.aspect_ratio)
+    # image = Image(400)
+    camera = Camera(Vector3(13,2,3),Vector3(0,0,0), settings.aspect_ratio)
+    camera.vup = Vector3(0,1,0)
+    camera.vertical_fov = 90
+    camera.aperture = 0.1
+    camera.focus_distance = (camera.origin - camera.look_at).length
     camera.initialize_camera()
+    # camera.vertical_fov = 20
     t0 = time.time()
     sceneobjs = PrimitiveList()
 
-    matground = Diffuse(Pigment(RGBColor(0.8, 0.8, 0)))
-    matcenter = Diffuse(Pigment(RGBColor(0.7, 0.3, 0.3)))
-    matleft = Metal(Pigment(RGBColor(0.8, 0.8, 0.8)), 0.3)
-    matright = Metal(Pigment(RGBColor(0.8, 0.6, 0.2)), 1.0)
+    matground = Diffuse(RGBColor(0.8, 0.8, 0))
+    matcenter = Diffuse(RGBColor(0.7, 0.3, 0.3))
+    matleft = Metal(RGBColor(0.8, 0.8, 0.8), 0.3)
+    matright = Metal(RGBColor(0.8, 0.6, 0.2), 1.0)
 
-    # sceneobjs.add(Sphere(Vector3(0, 0, -1), 0.5, matcenter))
-    sceneobjs.add(Sphere(Vector3(0, -100.5, -1), 100, matground))
+    sceneobjs.add(Sphere(Vector3(0, 0, -1), 1, matcenter))
+    # sceneobjs.add(Sphere(Vector3(0, -1000.5, -1), 1000, matground))
     # sceneobjs.add(Sphere(Vector3(-1, 0, -1), 0.5, matleft))
     # sceneobjs.add(Sphere(Vector3(1, 0, -1), 0.5, matright))
     scene = Scene(settings, sceneobjs, camera)

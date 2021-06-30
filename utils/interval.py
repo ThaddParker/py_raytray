@@ -7,6 +7,9 @@ class Interval:
         self.min_dist = min_dist
         self.max_dist = max_dist
 
+    def __str__(self):
+        return "{:.4f}, {:.4f}".format(self.min_dist, self.max_dist)
+
     def contains(self, x):
         return self.min_dist <= x <= self.max_dist
 
