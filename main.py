@@ -80,8 +80,9 @@ import math
 
 def main():
     print("ok")
-    settings = SceneSettings(5, 5, (16./9.))
+    settings = SceneSettings(20, 5, (16./9.))
     settings.image_width = 1200
+
 
 
     # samplesperpixel = 100
@@ -91,6 +92,7 @@ def main():
     camera.vup = Vector3(0,1,0)
     camera.vertical_fov = 90
     camera.aperture = 0.1
+
     camera.focus_distance = (camera.origin - camera.look_at).length
     camera.initialize_camera()
     # camera.vertical_fov = 20
@@ -103,7 +105,7 @@ def main():
     matright = Metal(RGBColor(0.8, 0.6, 0.2), 1.0)
 
     sceneobjs.add(Sphere(Vector3(0, 0, -1), 1, matcenter))
-    # sceneobjs.add(Sphere(Vector3(0, -1000.5, -1), 1000, matground))
+    sceneobjs.add(Sphere(Vector3(0, -1000.5, -1), 1000, matground))
     # sceneobjs.add(Sphere(Vector3(-1, 0, -1), 0.5, matleft))
     # sceneobjs.add(Sphere(Vector3(1, 0, -1), 0.5, matright))
     scene = Scene(settings, sceneobjs, camera)

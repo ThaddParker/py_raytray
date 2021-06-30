@@ -31,18 +31,22 @@ class Camera:
     def initialize_camera(self):
         theta = degrees_to_radians(self.vertical_fov)
         hght = math.tan(theta/2.)
+        self.viewport_height = 2.0 * hght
+        self.viewport_width = self.aspect_ratio * self.viewport_height
+
         self.w = (self.origin - self.look_at).normalize()
         self.u = (self.vup.cross(self.w)).normalize()
         self.v = self.w.cross(self.u)
 
-        self.viewport_height = 2.0 * hght
-        self.horizontal = self.viewport_width * self.u
-        self.vertical = self.viewport_height * self.v
 
-        self.lower_left = self.origin - self.horizontal / 2.0 - self.vertical / 2.0 - self.w
+        self.horizontal = self.focus_distance* self.viewport_width * self.u
+        self.vertical = self.focus_distance* self.viewport_height * self.v
+
+        self.lower_left = self.origin - self.horizontal / 2.0 - self.vertical / 2.0 - self.focus_distance*self.w
+        self.lens_radius = self.aperture / 2.
 
     def create_ray(self, x, y):
         rd = self.lens_radius * random_in_unit_disk()
         offset = self.u * rd.x + self.v * rd.y
-        ray_dir = self.lower_left + x*self.horizontal + y*self.vertical - self.origin
+        ray_dir = self.lower_left + x*self.horizontal + y*self.vertical - self.origin - offset
         return Ray(self.origin + offset, ray_dir)

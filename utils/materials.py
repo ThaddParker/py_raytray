@@ -31,7 +31,7 @@ class Diffuse(Material):
         return self.name + ":pigment: %s" % self.pigment.color.__str__()
 
     def scatter(self, ray_in, isect):
-        scatter_dir = isect.normal + random_unit_vector()
+        scatter_dir = isect.normal + random_in_unit_sphere()
         # catch degenerate scatter direction
         if near_zero(scatter_dir):
             scatter_dir = isect.normal
@@ -102,8 +102,9 @@ class Refractive(Material):
 
 class Checkered(Material):
 
-    def __init__(self, even_color=RGBColor(1, 1, 1), odd_color=RGBColor(0, 0, 0)):
+    def __init__(self, scale, even_color=Pigment(RGBColor(1, 1, 1)), odd_color=Pigment(RGBColor(0, 0, 0))):
         super().__init__("checkered_material")
+        self.scale = scale
         self.even_color = even_color
         self.odd_color = odd_color
 

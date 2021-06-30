@@ -32,10 +32,10 @@ class Sphere(Primitive):
     def __str__(self):
         return "{}: origin:{}, radius: {}, material: {}".format(self.name, self.origin, self.radius, self.material)
 
-    def intersect(self, ray, ray_minmax_dist):
+    def intersect(self, ray, ray_dist_interval):
 
         oc = ray.origin - self.origin
-        a = ray.direction.dot(ray.direction)
+        a = ray.direction.length**2
         half_b = ray.direction.dot(oc)  # 2.0 * oc.dot(ray.direction)
         c = oc.dot(oc) - self.radius ** 2
         disc = half_b ** 2 - a * c
@@ -44,9 +44,9 @@ class Sphere(Primitive):
             return None
         sqrtd = math.sqrt(disc)
         root = (-half_b - sqrtd) / a
-        if not ray_minmax_dist.contains(root):
+        if not ray_dist_interval.contains(root):
             root = (-half_b + sqrtd) / a
-            if not ray_minmax_dist.contains(root):
+            if not ray_dist_interval.contains(root):
                 return None
 
         isect = Intersection()

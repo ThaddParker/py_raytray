@@ -20,12 +20,12 @@ class PrimitiveList(Primitive):
     def add(self, obj):
         self.objects.append(obj)
 
-    def intersect(self, ray, ray_minmax_dist) -> Optional[Intersection]:
+    def intersect(self, ray, ray_dist_interval) -> Optional[Intersection]:
         isect = None
         # found = False
-        closest = ray_minmax_dist.max_dist
+        closest = ray_dist_interval.max_dist
         for obj in self.objects:
-            o = obj.intersect(ray, Interval(ray_minmax_dist.min_dist, closest))
+            o = obj.intersect(ray, Interval(ray_dist_interval.min_dist, closest))
             if o is not None:
                 # found = True
                 closest = o.distance
