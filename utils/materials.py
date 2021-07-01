@@ -50,6 +50,7 @@ class Metal(Material):
             # assuming an RGBColor
             self.pigment = Pigment(color)
         self.roughness = roughness if roughness < 1. else 1.
+        self.shininess = None
 
     def __str__(self):
         return self.name + ":pigment: %s" % self.pigment.color.__str__()
