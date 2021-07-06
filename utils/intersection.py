@@ -7,6 +7,7 @@ class Intersection:
         self.front_face = False
         self.primitive = None
         self.material = None
+        self.uv_coordinates = None # a u-v tuple
 
     def __str__(self):
         p = self.point.__str__()

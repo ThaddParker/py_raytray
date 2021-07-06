@@ -1,14 +1,15 @@
+from utils.boundingvolume import BoundingVolumeNode
 from utils.camera import Camera
 from utils.functs import random_double, random_in_unit_sphere, random_unit_vector, random_in_hemisphere
 from utils.image import Image
 from utils.colors import RGBColor
 from utils.interval import Interval
-from utils.materials import Diffuse, Metal
+from utils.materials import Diffuse, Metal, Refractive
 from utils.primitive_list import PrimitiveList
 from utils.scene import Scene
 from utils.scene_settings import SceneSettings
 from utils.shapes import Sphere
-from utils.textures import Pigment
+from utils.textures import Checker, Pigment, Perlin
 import time
 from tqdm import tqdm
 from vectormath import Vector3
@@ -80,18 +81,16 @@ import math
 
 def main():
     print("ok")
-    settings = SceneSettings(20, 5, (16./9.))
-    settings.image_width = 1200
-
-
+    settings = SceneSettings(100, 50, (16. / 9.))
+    # settings.image_width = 1200
 
     # samplesperpixel = 100
     # maxdepth = 50
     # image = Image(400)
-    camera = Camera(Vector3(13,2,3),Vector3(0,0,0), settings.aspect_ratio)
-    camera.vup = Vector3(0,1,0)
+    camera = Camera(Vector3(10, 2, 2), Vector3(0, 0, 0), settings.aspect_ratio)
+    camera.vup = Vector3(0, 1, 0)
     camera.vertical_fov = 90
-    camera.aperture = 0.1
+    camera.aperture = 0.5
 
     camera.focus_distance = (camera.origin - camera.look_at).length
     camera.initialize_camera()
@@ -103,39 +102,23 @@ def main():
     matcenter = Diffuse(RGBColor(0.7, 0.3, 0.3))
     matleft = Metal(RGBColor(0.8, 0.8, 0.8), 0.3)
     matright = Metal(RGBColor(0.8, 0.6, 0.2), 1.0)
+    matperlin = Diffuse(Perlin(4))
+    matchecker = Diffuse(Checker(0.25, RGBColor(0, 0, 0), RGBColor(1, 1, 1)))
+    matrefractive = Refractive(RGBColor(1,1,1),1.5)
 
-    sceneobjs.add(Sphere(Vector3(0, 0, -1), 1, matcenter))
-    sceneobjs.add(Sphere(Vector3(0, -1000.5, -1), 1000, matground))
-    # sceneobjs.add(Sphere(Vector3(-1, 0, -1), 0.5, matleft))
-    # sceneobjs.add(Sphere(Vector3(1, 0, -1), 0.5, matright))
+    sceneobjs.add(Sphere(Vector3(0, 1, -1), 1, matleft))
+    sceneobjs.add(Sphere(Vector3(1, 0, -1), 1, matrefractive))
+    sceneobjs.add(Sphere(Vector3(0, -1000.5, -1), 1000, matperlin))
+    # sceneobjs.add(Sphere(Vector3(-1, 10, -1), 0.5, matleft))
+    # sceneobjs.add(Sphere(Vector3(1,10, -1), 0.5, matright))
+    # aa = BoundingVolumeNode(sceneobjs)
+    # bb = PrimitiveList(aa)
     scene = Scene(settings, sceneobjs, camera)
 
     scene.render()
-    # def to_byte(color_item):
-    #     return round(max(min(color_item * 255, 255), 0))
-
-    # with open("first_test.ppm", "w") as img_file:
-    #     img_file.write("P3 {} {}\n255\n".format(image.width, image.height))
-    #     for j in tqdm(reversed(range(image.height))):
-    #         for i in range(image.width):
-    #             pixel_color = RGBColor(0, 0, 0)
-    #             for s in range(scene.scene_settings.samplesperpixel):
-    #                 x = float(i + random_double()) / image.width
-    #                 y = float(j + random_double()) / image.height
-    #                 ray = camera.create_ray(x, y)
-    #                 pixel_color += ray_color(ray, sceneobjs,
-    #                                          scene.scene_settings.max_depth)  # RGBColor(float(i)/image.width, float(j)/image.height, 0.25)
-    #                 # image.set_pixel(i, j, pixel_color)
-    #
-    #             write_color(img_file, pixel_color, scene.scene_settings.samplesperpixel)
-    #             # img_file.write(
-    #             #     "{} {} {} ".format(to_byte(pixel_color.red), to_byte(pixel_color.green), to_byte(pixel_color.blue)))
-    #         img_file.write("\n")
-    # # with open("first_test.ppm", "w") as img_file:
-    # #     image.write_ppm_file(img_file)
     t1 = time.time()
     diff = t1 - t0
-    print("Done...\nTime: %s seconds" % diff)
+    print("Done...\nTime: %s minutes" % (diff / 60.))
 
 
 if __name__ == "__main__":

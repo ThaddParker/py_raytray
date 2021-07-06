@@ -1,7 +1,7 @@
 import math
-from abc import abstractmethod, ABC
+from abc import ABC
 
-from utils.functs import random_unit_vector, reflect, random_in_unit_sphere, refract, near_zero, random_double
+from utils.functs import reflect, random_in_unit_sphere, refract, near_zero, random_double
 from utils.ray import Ray
 from utils.textures import Pigment, Texture
 from utils.colors import RGBColor
@@ -12,7 +12,9 @@ class Material(ABC):
     def __init__(self, name='base_material'):
         self.name = name
 
-    @abstractmethod
+    def emit(self, uv_coord, point):
+        return RGBColor(0, 0, 0)  # returns a black color
+
     def scatter(self, ray_in, isect):
         pass
 
@@ -35,8 +37,8 @@ class Diffuse(Material):
         # catch degenerate scatter direction
         if near_zero(scatter_dir):
             scatter_dir = isect.normal
-        scattered = Ray(isect.point, scatter_dir)
-        attenuation = self.pigment.color
+        scattered = Ray(isect.point, scatter_dir, ray_in.time)
+        attenuation = self.pigment.value(isect.uv_coordinates, isect.point)
         return True, scattered, attenuation
 
 
@@ -57,7 +59,7 @@ class Metal(Material):
 
     def scatter(self, ray_in, isect):
         reflected = reflect(ray_in.direction.normalize(), isect.normal)
-        ray_scattered = Ray(isect.point, reflected + self.roughness * random_in_unit_sphere())
+        ray_scattered = Ray(isect.point, reflected + self.roughness * random_in_unit_sphere(), ray_in.time)
         attenuation = self.pigment.color
         d = ray_scattered.direction.dot(isect.normal) > 0
         return d, ray_scattered, attenuation
@@ -90,7 +92,7 @@ class Refractive(Material):
         else:
             direction = refract(unit_direction, isect.normal, refraction_ratio)
 
-        scattered_ray = Ray(isect.point, direction)
+        scattered_ray = Ray(isect.point, direction, ray_in.time)
         return True, scattered_ray, attenuation
 
     @staticmethod
@@ -110,7 +112,7 @@ class Checkered(Material):
         self.odd_color = odd_color
 
     def __str__(self):
-        return self.name + ":evenpigment: {}: oddpigment {}".format(self.even_color.__str__(),self.odd_color.__str__())
+        return self.name + ":evenpigment: {}: oddpigment {}".format(self.even_color.__str__(), self.odd_color.__str__())
 
     def scatter(self, ray_in, isect):
         pass

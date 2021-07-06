@@ -1,3 +1,4 @@
+pip
 numpy>=1.20.3
 tqdm>=4.61.1
 vectormath>=0.2.2

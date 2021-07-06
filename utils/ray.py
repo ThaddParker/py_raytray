@@ -3,9 +3,10 @@
 class Ray:
     """A basic ray object"""
     
-    def __init__(self, origin, direction) -> None:
+    def __init__(self, origin, direction,time) -> None:
         self.origin = origin
         self.direction = direction
+        self.time = time
         
     def evaluate(self, t):
         return self.origin + t * self.direction

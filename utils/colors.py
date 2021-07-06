@@ -30,10 +30,10 @@ class RGBColor:
         return [self.red, self.green, self.blue].__iter__()
 
     @staticmethod
-    def random(minval=0.0, maxval=1.0):
-        red = random_double(minval, maxval)
-        green = random_double(minval, maxval)
-        blue = random_double(minval, maxval)
+    def random(min_val=0.0, max_val=1.0):
+        red = random_double(min_val, max_val)
+        green = random_double(min_val, max_val)
+        blue = random_double(min_val, max_val)
         return RGBColor(red, green, blue)
 
     def __setitem__(self, key, value):
@@ -53,7 +53,8 @@ class RGBColor:
                 self.blue = value
         else:
             raise ValueError(
-                f"The key: {key} and value: {value} is invalid. Either use an integer or string for the key and use float value for the value field")
+                f"The key: {key} and value: {value} is invalid. Either use an integer or string for the key and use "
+                f"float value for the value field")
 
     def __getitem__(self, item):
         if isinstance(item, int):
@@ -138,7 +139,7 @@ Brown = RGBColor(0.647059, 0.164706, 0.164706, "brown")
 CadetBlue = RGBColor(0.372549, 0.623529, 0.623529, "cadetblue")
 Coral = RGBColor(1.0, 0.498039, 0.0, "coral")
 CornflowerBlue = RGBColor(0.258824, 0.258824, 0.435294, "cornflowerblue")
-DarkGreen = RGBColor(0.184314, 0.309804, 0.184314,"darkgreen")
+DarkGreen = RGBColor(0.184314, 0.309804, 0.184314, "darkgreen")
 DarkOliveGreen = RGBColor(0.309804, 0.309804, 0.184314, "darkolivegreen")
 DarkOrchid = RGBColor(0.6, 0.196078, 0.8, "darkorchid")
 DarkSlateBlue = RGBColor(0.119608, 0.137255, 0.556863, "darkslateblue")
@@ -162,8 +163,8 @@ MediumForestGreen = RGBColor(0.419608, 0.556863, 0.137255, "mediumforestgreen")
 MediumGoldenrod = RGBColor(0.917647, 0.917647, 0.678431, "mediumgoldenrod")
 MediumOrchid = RGBColor(0.576471, 0.439216, 0.858824, "mediumorchid")
 MediumSeaGreen = RGBColor(0.258824, 0.435294, 0.258824, "mediumseagreen")
-MediumSlateBlue = RGBColor(0, 0.498039, 1.0) # TODO: Fixme here if this is correct color
-MediumSpringGreen = RGBColor(0, 0.498039, 1.0) # TODO: see above
+MediumSlateBlue = RGBColor(0, 0.498039, 1.0)  # TODO: Fixme here if this is correct color
+MediumSpringGreen = RGBColor(0, 0.498039, 1.0)  # TODO: see above
 MediumTurquoise = RGBColor(0.439216, 0.858824, 0.858824, "mediumturquoise")
 MediumVioletRed = RGBColor(0.858824, 0.439216, 0.576471, "mediumvioletred")
 MidnightBlue = RGBColor(0.184314, 0.184314, 0.309804, "midnightblue")
