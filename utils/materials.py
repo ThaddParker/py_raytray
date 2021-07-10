@@ -1,7 +1,7 @@
 import math
 from abc import ABC
 
-from utils.functs import reflect, random_in_unit_sphere, refract, near_zero, random_double
+from utils.functs import reflect, random_in_unit_sphere, refract, near_zero, random_double, random_in_hemisphere
 from utils.ray import Ray
 from utils.textures import Pigment, Texture
 from utils.colors import RGBColor
@@ -33,7 +33,7 @@ class Diffuse(Material):
         return self.name + ":pigment: %s" % self.pigment.color.__str__()
 
     def scatter(self, ray_in, isect):
-        scatter_dir = isect.normal + random_in_unit_sphere()
+        scatter_dir = isect.normal + random_in_hemisphere(isect.normal)
         # catch degenerate scatter direction
         if near_zero(scatter_dir):
             scatter_dir = isect.normal
@@ -103,16 +103,20 @@ class Refractive(Material):
         return r0 + (1. - r0) * math.pow(1. - cosine, 5)
 
 
-class Checkered(Material):
+class DiffuseLight(Material):
 
-    def __init__(self, scale, even_color=Pigment(RGBColor(1, 1, 1)), odd_color=Pigment(RGBColor(0, 0, 0))):
-        super().__init__("checkered_material")
-        self.scale = scale
-        self.even_color = even_color
-        self.odd_color = odd_color
-
-    def __str__(self):
-        return self.name + ":evenpigment: {}: oddpigment {}".format(self.even_color.__str__(), self.odd_color.__str__())
+    def __init__(self,color):
+        super().__init__("diffuse_light_material")
+        if isinstance(color, Texture):
+            self.pigment = color
+        else:
+            # assuming an RGBColor
+            self.pigment = Pigment(color)
 
     def scatter(self, ray_in, isect):
-        pass
+       return False, ray_in, isect
+
+    def emit(self, uv_coord, point):
+        return self.pigment.value(uv_coord, point)
+
+

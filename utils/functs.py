@@ -78,3 +78,30 @@ def reflectance(cos, ref_index):
     r0 = (1.0 - ref_index) / (1.0 + ref_index)
     r0 = r0 ** 2
     return r0 + (1.0 - r0) * math.pow((1.0 - cos), 0.5)
+
+
+def smooth_step(val) -> float:
+    """cubic smoothing function"""
+    return val ** 2 * (3. - 2. * val)
+
+
+def fade(val) -> float:
+    """quintic smoothing"""
+    return val ** 3 * (val * (val * 6. - 15.) + 10)
+
+
+def stripes(val, f) -> float:
+    val = 0.5 + 0.5 * math.sin(f * 2. * math.pi * val)
+    return val ** 2 - 0.5
+
+
+def random_cosine_direction():
+    r1 = random_double()
+    r2 = random_double()
+
+    phi = 2 * math.pi * r1
+    x = math.cos(phi) * math.sqrt(r2)
+    y = math.sin(phi) * math.sqrt(r2)
+    z = math.sqrt(1 - r2)
+
+    return Vector3(x, y, z)

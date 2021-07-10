@@ -74,6 +74,7 @@ class Sphere(Primitive):
         v = theta / math.pi
         return (u, v)
 
+
 class MovingSphere(Primitive):
 
     def __init__(self, center_start, center_end, radius, material) -> None:
@@ -97,7 +98,7 @@ class MovingSphere(Primitive):
         a = ray.direction.length**2
         half_b = oc.dot(ray.direction)
         c = oc.length**2 - self.radius**2
-        disc = half_b*half_b  - a*c
+        disc = half_b*half_b - a*c
         sqrtd = math.sqrt(disc)
         if disc < 0:
             return None
@@ -110,7 +111,7 @@ class MovingSphere(Primitive):
         isect.distance = root
         isect.point = ray.evaluate(root)
         outward_normal = (isect.point - self.center(ray.time)) / self.radius
-        isect.set_face_normal(outward_normal)
+        isect.set_face_normal(ray,outward_normal)
         isect.material = self.material
         isect.object = self
         return isect
@@ -120,7 +121,22 @@ class MovingSphere(Primitive):
 
 
 class Rectangle(Primitive):
-    pass
+    def __init__(self, min_point, max_point, axis='xy'):
+        super().__init__("rectangle_primitive")
+        self.min_point = min_point
+        self.max_point = max_point
+        self.axis = axis
+
+        pass
+
+    def intersect(self, ray, ray_dist_interval):
+        if self.axis == 'xy':
+            pass
+        elif self.axis == 'yz':
+            pass
+        elif self.axis == 'z':
+            pass
+        pass
 
 class Box(Primitive):
-
+    pass

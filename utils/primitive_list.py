@@ -36,12 +36,6 @@ class PrimitiveList(Primitive):
         bbox.from_boundingbox(self.boundingbox, obj.boundingbox)
         self.boundingbox = bbox
 
-    def has_no_boundingboxes(self):
-        return [b for b in self.objects if b.boundingbox is None]
-
-    def has_boundingboxes(self):
-        return [b for b in self.objects if b.boundingbox is not None]
-
     def intersect(self, ray, ray_dist_interval) -> Optional[Intersection]:
         isect = None
         # found = False

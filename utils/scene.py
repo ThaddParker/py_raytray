@@ -10,11 +10,13 @@ from utils.textures import Gradient, Pigment
 
 
 class Scene:
-    def __init__(self,scene_settings, primitive_list, camera):
+    def __init__(self, scene_settings, primitive_list, camera):
         self.scene_settings = scene_settings
         self.image = Image(scene_settings.image_width)
         self.camera = camera
         self.objects = primitive_list
+        self.background = Gradient(Pigment(RGBColor(1.0, 1.0, 1.0)), Pigment(RGBColor(0.5, 0.7, 1.0)))
+        self.ambient = RGBColor(0.5, 0.5, 0.5)
 
     def render(self):
         with open(self.scene_settings.image_file_name, "w") as img_file:
@@ -26,45 +28,29 @@ class Scene:
                         x = float(i + random_double()) / self.image.width
                         y = float(j + random_double()) / self.image.height
                         ray = self.camera.create_ray(x, y)
-                        pixel_color += self.ray_color(ray, self.scene_settings.max_depth)  # RGBColor(float(i)/image.width, float(j)/image.height, 0.25)
-                        # image.set_pixel(i, j, pixel_color)
+                        pixel_color += self.ray_color(ray, self.scene_settings.max_depth)
 
                     self.write_color(img_file, pixel_color, self.scene_settings.samplesperpixel)
-                    # img_file.write(
-                    #     "{} {} {} ".format(to_byte(pixel_color.red), to_byte(pixel_color.green), to_byte(pixel_color.blue)))
+
                 img_file.write("\n")
 
-    def ray_color(self, ray,  depth):
+    def ray_color(self, ray, depth):
         if depth <= 0:
             return RGBColor(0, 0, 0)
 
         isect = self.objects.intersect(ray, Interval(0.001, math.inf))
-
-        if isect is not None:
-            good, ray_scattered, attenuation = isect.material.scatter(ray, isect)
-            if good:
-                ray = ray_scattered
-                return attenuation * self.ray_color(ray, depth - 1)
-            else:
-                return RGBColor(0, 0, 0) # black
-
-            # vec = 0.5 * (isect.normal + Vector3(1, 1, 1))
-            # target = isect.point + random_in_hemisphere(isect.normal) # +  isect.normal + random_unit_vector() # random_in_unit_sphere()
-            # val = 0.5 * ray_color(Ray(isect.point, target - isect.point), scene, depth - 1)
-            # return val  #  RGBColor(vec.x, vec.y, vec.z)
-
-            # dist = sphere_intersect(Vector3(0, 0, -1), 0.5, ray)
-            # if dist > 0.0:
-            #     n = (ray.evaluate(dist) - Vector3(0,0,-1)).normalize()
-            #     return 0.5 * RGBColor(n.x + 1, n.y + 1, n.z + 1)
-        # else:
+        if isect is None:
             # this will be the skysphere with atmospherics
-        background = Gradient(Pigment(RGBColor(1.0, 1.0, 1.0)), Pigment(RGBColor(0.5, 0.7, 1.0)))
-        return background.value((0, 0), ray)
-            # gradient texture
-            # unit_dir = ray.direction.normalize()
-            # t = 0.5 * (unit_dir.y + 1)
-            # return (1.0 - t) * RGBColor(1.0, 1.0, 1.0) + t * RGBColor(0.5, 0.7, 1.0)
+            return self.background.value((0, 0), ray)
+
+        good, ray_scattered, attenuation = isect.material.scatter(ray, isect)
+        emitted = isect.material.emit(isect.uv_coordinates, isect.point)
+
+        if not good:
+
+            return emitted  # this will typically be a black, but could change to ambient or other color base
+        else:
+            return emitted + attenuation * self.ray_color(ray_scattered, depth - 1)
 
     def write_color(self, image_file, pixel_color, samples_per_pixel):
         # get the color values locally
