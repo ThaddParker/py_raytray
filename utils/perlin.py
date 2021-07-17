@@ -62,7 +62,8 @@ class PerlinNoise:
 
         return self.perlin_interpolate(c, su, sv, sw)
 
-    def perlin_interpolate(self, c, u: float, v: float, w: float) -> float:
+    @staticmethod
+    def perlin_interpolate(c, u: float, v: float, w: float) -> float:
         accum = 0.0
         for i in range(2):
             for j in range(2):

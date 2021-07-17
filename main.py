@@ -5,10 +5,10 @@ from utils.image import Image
 from utils.colors import RGBColor
 from utils.interval import Interval
 from utils.materials import Diffuse, Metal, Refractive
-from utils.primitive_list import PrimitiveList
+# from utils.primitive_list import PrimitiveList
 from utils.scene import Scene
 from utils.scene_settings import SceneSettings
-from utils.shapes import Sphere
+from utils.shapes import Sphere, PrimitiveList
 from utils.textures import Checker, Pigment, Perlin
 import time
 from tqdm import tqdm
@@ -17,13 +17,13 @@ import math
 
 def main():
     print("ok")
-    settings = SceneSettings(1000, 50, (16. / 9.), image_width=800)
+    settings = SceneSettings(50, 5, (16. / 9.), image_width=600)
     # settings.image_width = 1200
 
     # samplesperpixel = 100
     # maxdepth = 50
     # image = Image(400)
-    camera = Camera(Vector3(1, 2, 2), Vector3(0, 0, 0), settings.aspect_ratio)
+    camera = Camera(Vector3(15, 0, 0), Vector3(0, 0, 0), settings.aspect_ratio)
     camera.vup = Vector3(0, 1, 0)
     camera.vertical_fov = 45
     camera.aperture = 0.1
@@ -50,6 +50,7 @@ def main():
     # aa = BoundingVolumeNode(sceneobjs)
     # bb = PrimitiveList(aa)
     scene = Scene(settings, sceneobjs, camera)
+    print("imagewidth: {}, imageheight: {}".format(scene.image.width, scene.image.height))
 
     scene.render()
     t1 = time.time()

@@ -84,4 +84,15 @@ class Turbulence(Perlin):
 
     def value(self, uv_point, point):
         s = self.scale * point
+        return RGBColor(1,1,1) * self.perlin_noise.turbulence(s)
+
+class Marble(Perlin):
+    def __init__(self,scale, pn):
+        super().__init__(scale, pn)
+        self.name = "turbulence_texture"
+        self.perlin_noise = pn if pn is not None else PerlinNoise()
+        self.scale = scale
+
+    def value(self, uv_point, point):
+        s = self.scale * point
         return RGBColor(1,1,1) * 0.5 * (1. + math.sin(s.z + 10 * self.perlin_noise.turbulence(s)))

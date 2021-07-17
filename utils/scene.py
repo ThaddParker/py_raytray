@@ -19,6 +19,7 @@ class Scene:
         self.ambient = RGBColor(0.5, 0.5, 0.5)
 
     def render(self):
+        print("image_width: {} image_height: {}".format(self.image.width, self.image.height))
         with open(self.scene_settings.image_file_name, "w") as img_file:
             img_file.write("P3 {} {}\n255\n".format(self.image.width, self.image.height))
             for j in tqdm(reversed(range(self.image.height))):
