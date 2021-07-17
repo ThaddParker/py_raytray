@@ -270,7 +270,7 @@ class PrimitiveList(Primitive):
         bbox.from_boundingbox(self.boundingbox, obj.boundingbox)
         self.boundingbox = bbox
 
-    def intersect(self, ray, ray_dist_interval) -> Optional[Intersection]:
+    def intersect(self, ray, ray_dist_interval):
         isect = None
         # found = False
         closest = ray_dist_interval.max_dist

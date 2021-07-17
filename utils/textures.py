@@ -71,12 +71,12 @@ class Perlin(Texture):
 
     def value(self, uv_point, point):
         val = 1. + self.perlin_noise.noise(self.scale * point)
-        return RGBColor(1, 1, 1) * 0.5 * val
+        return RGBColor(1, 1, 1) * 0.5 * val # TODO: Need to change the RGBColor to represent diff colors and types
 
 
 class Turbulence(Perlin):
 
-    def __init__(self,scale, pn):
+    def __init__(self, scale, pn):
         super().__init__(scale, pn)
         self.name = "turbulence_texture"
         self.perlin_noise = pn if pn is not None else PerlinNoise()
@@ -84,15 +84,16 @@ class Turbulence(Perlin):
 
     def value(self, uv_point, point):
         s = self.scale * point
-        return RGBColor(1,1,1) * self.perlin_noise.turbulence(s)
+        return RGBColor(1, 1, 1) * self.perlin_noise.turbulence(s)
+
 
 class Marble(Perlin):
-    def __init__(self,scale, pn):
+    def __init__(self, scale, pn):
         super().__init__(scale, pn)
-        self.name = "turbulence_texture"
+        self.name = "marble_texture"
         self.perlin_noise = pn if pn is not None else PerlinNoise()
         self.scale = scale
 
     def value(self, uv_point, point):
         s = self.scale * point
-        return RGBColor(1,1,1) * 0.5 * (1. + math.sin(s.z + 10 * self.perlin_noise.turbulence(s)))
+        return RGBColor(1, 1, 1) * 0.5 * (1. + math.sin(s.z + 10 * self.perlin_noise.turbulence(s)))
