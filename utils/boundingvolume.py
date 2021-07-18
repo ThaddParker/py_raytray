@@ -9,7 +9,7 @@ from utils.functs import random_int
 
 
 def box_compare(a: Primitive, b: Primitive, axis):
-    return a.boundingbox.axis(axis).min_dist < b.boundingbox.axis(axis).min_dist
+    return a.bounding_box.axis(axis).min_dist < b.bounding_box.axis(axis).min_dist
 
 
 def box_x_compare(a, b):
@@ -67,7 +67,7 @@ class BoundingVolumeNode(Primitive):
             # sort the list
             # list[start:end].sort(key=comparator)
             a = list[start:end]
-            b = sorted(a, key=lambda x: x.boundingbox.axis(axis).min_dist)
+            b = sorted(a, key=lambda x: x.bounding_box.axis(axis).min_dist)
             mid = start + int(object_span / 2)
             self.left_node = BoundingVolumeNode(b, start, mid)
             self.right_node = BoundingVolumeNode(b, mid, end)

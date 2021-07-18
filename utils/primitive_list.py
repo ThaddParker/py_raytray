@@ -12,10 +12,10 @@ from utils.shapes import Primitive
 #         super().__init__('primitive_list')
 #         if obj is None:
 #             self.objects = []
-#             self.boundingbox = BoundingBox()
+#             self.bounding_box = BoundingBox()
 #         else:
 #             self.objects = []
-#             self.boundingbox= BoundingBox()
+#             self.bounding_box= BoundingBox()
 #             self.add(obj)
 #
 #
@@ -33,8 +33,8 @@ from utils.shapes import Primitive
 #     def add(self, obj):
 #         self.objects.append(obj)
 #         bbox = BoundingBox()
-#         bbox.from_boundingbox(self.boundingbox, obj.boundingbox)
-#         self.boundingbox = bbox
+#         bbox.from_boundingbox(self.bounding_box, obj.bounding_box)
+#         self.bounding_box = bbox
 #
 #     def intersect(self, ray, ray_dist_interval) -> Optional[Intersection]:
 #         isect = None

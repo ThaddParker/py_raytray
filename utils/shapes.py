@@ -12,7 +12,7 @@ class Primitive(ABC):
 
     def __init__(self, name='primitive') -> None:
         self.material = None
-        self.boundingbox = None
+        self.bounding_box = None
         self.name = name
 
     def __str__(self):
@@ -36,7 +36,7 @@ class Sphere(Primitive):
         vec = Vector3(radius, radius, radius)
         bbox = BoundingBox()
         bbox.from_vectors(origin - vec, origin + vec)
-        self.boundingbox = bbox
+        self.bounding_box = bbox
 
     def __str__(self):
         return "{}: origin:{}, radius: {}, material: {}".format(self.name, self.origin, self.radius, self.material)
@@ -74,7 +74,7 @@ class Sphere(Primitive):
         phi = math.atan2(-point.z, point.x) + math.pi
         u = phi / (2 * math.pi)
         v = theta / math.pi
-        return (u, v)
+        return u, v
 
 
 class MovingSphere(Primitive):
@@ -93,7 +93,7 @@ class MovingSphere(Primitive):
         bbox1.from_vectors(self.center_end - vec, self.center_end + vec)
         bbox = BoundingBox()
         bbox.from_boundingbox(bbox0, bbox1)
-        self.boundingbox = bbox
+        self.bounding_box = bbox
 
     def intersect(self, ray, ray_dist_interval) -> Optional[Intersection]:
         oc = ray.origin - self.center(ray.time)
@@ -143,10 +143,10 @@ class Rectangle(Primitive):
                 return None
             isect = Intersection()
             isect.distance = t
-            u = (x - self.min_point[0])/(self.min_point[1]-self.min_point[0])
-            v = (y - self.max_point[0])/(self.max_point[1] - self.max_point[0])
-            isect.uv_coordinates = (u,v)
-            out_normal = Vector3(0,0,1)
+            u = (x - self.min_point[0]) / (self.min_point[1] - self.min_point[0])
+            v = (y - self.max_point[0]) / (self.max_point[1] - self.max_point[0])
+            isect.uv_coordinates = (u, v)
+            out_normal = Vector3(0, 0, 1)
             isect.set_face_normal(ray, out_normal)
             isect.material = self.material
             isect.primitive = self
@@ -194,38 +194,38 @@ class Rectangle(Primitive):
 
     def _build_boundingbox(self):
         if self.axis == 'xy':
-            self.boundingbox = BoundingBox()
-            self.boundingbox.from_vectors(Vector3(self.min_point[0], self.max_point[0], self.k + 0.0001),
+            self.bounding_box = BoundingBox()
+            self.bounding_box.from_vectors(Vector3(self.min_point[0], self.max_point[0], self.k + 0.0001),
                                           Vector3(self.min_point[1], self.max_point[1], self.k + 0.0001))
         elif self.axis == 'yz':
-            self.boundingbox = BoundingBox()
-            self.boundingbox.from_vectors(Vector3(self.k + 0.0001, self.min_point[0], self.max_point[0]),
+            self.bounding_box = BoundingBox()
+            self.bounding_box.from_vectors(Vector3(self.k + 0.0001, self.min_point[0], self.max_point[0]),
                                           Vector3(self.k + 0.0001, self.min_point[1], self.max_point[1]))
 
         elif self.axis == 'xz':
-            self.boundingbox = BoundingBox()
-            self.boundingbox.from_vectors(Vector3(self.min_point[0], self.k + 0.0001, self.max_point[0]),
+            self.bounding_box = BoundingBox()
+            self.bounding_box.from_vectors(Vector3(self.min_point[0], self.k + 0.0001, self.max_point[0]),
                                           Vector3(self.min_point[1], self.k + 0.0001, self.max_point[1]))
 
 
 class Box(Primitive):
-    def __init__(self, box_min, box_max, material,offset=Vector3(0,0,0)):
+    def __init__(self, box_min, box_max, material, offset=Vector3(0, 0, 0)):
         super().__init__("box")
-        self.boundingbox = BoundingBox()
-        self.boundingbox.from_vectors(box_min + offset, box_max + offset)
+        self.bounding_box = BoundingBox()
+        self.bounding_box.from_vectors(box_min + offset, box_max + offset)
 
         self.box_min = box_min + offset
         self.box_max = box_max + offset
 
         self.sides = PrimitiveList()
-        self.sides.add(Rectangle((box_min.x,box_max.x),(box_min.y, box_max.y),box_max.z,material,'xy'))
-        self.sides.add(Rectangle((box_min.x,box_max.x),(box_min.y, box_max.y),box_min.z,material,'xy'))
+        self.sides.add(Rectangle((box_min.x, box_max.x), (box_min.y, box_max.y), box_max.z, material, 'xy'))
+        self.sides.add(Rectangle((box_min.x, box_max.x), (box_min.y, box_max.y), box_min.z, material, 'xy'))
 
-        self.sides.add(Rectangle((box_min.x,box_max.x),(box_min.z,box_max.z),box_max.y,material,'xz'))
-        self.sides.add(Rectangle((box_min.x,box_max.x),(box_min.z,box_max.z),box_min.y,material,'xz'))
+        self.sides.add(Rectangle((box_min.x, box_max.x), (box_min.z, box_max.z), box_max.y, material, 'xz'))
+        self.sides.add(Rectangle((box_min.x, box_max.x), (box_min.z, box_max.z), box_min.y, material, 'xz'))
 
-        self.sides.add(Rectangle((box_min.y,box_max.y),(box_min.z,box_max.z),box_max.x,material,'yz'))
-        self.sides.add(Rectangle((box_min.y,box_max.y),(box_min.z,box_max.z),box_min.x,material,'yz'))
+        self.sides.add(Rectangle((box_min.y, box_max.y), (box_min.z, box_max.z), box_max.x, material, 'yz'))
+        self.sides.add(Rectangle((box_min.y, box_max.y), (box_min.z, box_max.z), box_min.x, material, 'yz'))
 
         self.translate_offset = offset
 
@@ -246,10 +246,10 @@ class PrimitiveList(Primitive):
         super().__init__('primitive_list')
         if obj is None:
             self.objects = []
-            self.boundingbox = BoundingBox()
+            self.bounding_box = BoundingBox()
         else:
             self.objects = []
-            self.boundingbox = BoundingBox()
+            self.bounding_box = BoundingBox()
             self.add(obj)
 
     def __str__(self):
@@ -267,8 +267,8 @@ class PrimitiveList(Primitive):
     def add(self, obj):
         self.objects.append(obj)
         bbox = BoundingBox()
-        bbox.from_boundingbox(self.boundingbox, obj.boundingbox)
-        self.boundingbox = bbox
+        bbox.from_boundingbox(self.bounding_box, obj.bounding_box)
+        self.bounding_box = bbox
 
     def intersect(self, ray, ray_dist_interval):
         isect = None

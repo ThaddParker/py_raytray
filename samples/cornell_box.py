@@ -10,7 +10,7 @@ from vectormath import Vector3
 
 def cornell_box():
     red = Diffuse(Pigment(RGBColor(.65, 0.05, 0.05)))
-    white = Diffuse(Pigment(RGBColor(.73, .73, 0.73)))
+    white = Diffuse(Pigment(RGBColor(0.73, 0.73, 0.73)))
     green = Diffuse(Pigment(RGBColor(0.12, 0.45, 0.15)))
     light = DiffuseLight(RGBColor(15, 15, 15))
 
