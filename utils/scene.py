@@ -19,6 +19,7 @@ class Scene:
         self.ambient = RGBColor(0.5, 0.5, 0.5)
 
     def render(self):
+        print("filename: {}".format(self.scene_settings.image_file_name))
         print("image_width: {} image_height: {}".format(self.image.width, self.image.height))
         with open(self.scene_settings.image_file_name, "w") as img_file:
             img_file.write("P3 {} {}\n255\n".format(self.image.width, self.image.height))
@@ -48,12 +49,12 @@ class Scene:
         emitted = isect.material.emit(isect.uv_coordinates, isect.point)
 
         if not good:
-
             return emitted  # this will typically be a black, but could change to ambient or other color base
         else:
             return emitted + attenuation * self.ray_color(ray_scattered, depth - 1)
 
-    def write_color(self, image_file, pixel_color, samples_per_pixel):
+    @staticmethod
+    def write_color(image_file, pixel_color, samples_per_pixel):
         # get the color values locally
         r = pixel_color.red
         g = pixel_color.green

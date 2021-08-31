@@ -71,7 +71,7 @@ class Perlin(Texture):
 
     def value(self, uv_point, point):
         val = 1. + self.perlin_noise.noise(self.scale * point)
-        return RGBColor(1, 1, 1) * 0.5 * val # TODO: Need to change the RGBColor to represent diff colors and types
+        return RGBColor(1, 1, 1) * 0.5 * val  # TODO: Need to change the RGBColor to represent diff colors and types
 
 
 class Turbulence(Perlin):

@@ -18,8 +18,8 @@ def cornell_box():
     objects.add(Rectangle((0, 555), (0, 555), 555, green, 'yz'))
     objects.add(Rectangle((0, 555), (0, 555), 555, red, 'yz'))
     objects.add(Rectangle((213, 343), (227, 332), 555, light, 'xz'))
-    objects.add(Rectangle((0, 555), (0, 555), 0, white, 'xz'))
-    objects.add(Rectangle((0, 555), (0, 555), 555, white, 'xz'))
+    # objects.add(Rectangle((0, 555), (0, 555), 0, white, 'xz'))
+    # objects.add(Rectangle((0, 555), (0, 555), 555, white, 'xz'))
     objects.add(Rectangle((0, 555), (0, 555), 555, white, 'xy'))
 
     return objects

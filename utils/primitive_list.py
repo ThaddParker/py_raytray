@@ -1,9 +1,9 @@
-from typing import Optional
-from utils.boundingbox import BoundingBox
+# from typing import Optional
+# from utils.boundingbox import BoundingBox
 
-from utils.intersection import Intersection
-from utils.interval import Interval
-from utils.shapes import Primitive
+# from utils.intersection import Intersection
+# from utils.interval import Interval
+# from utils.shapes import Primitive
 
 #
 # class PrimitiveList(Primitive):
